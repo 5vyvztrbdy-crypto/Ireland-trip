@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#12372a" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Ireland Tour" />
+  <title>Joyce Ireland Trip Companion</title>
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="icon.svg" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIINfQ3jMZWPwJFP4pGAYlWwRjt/Pp3y7A=" crossorigin="" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="hero">
+    <div>
+      <p class="eyebrow">JOYCE FAMILY IRELAND TOUR</p>
+      <h1>Your Daily Trip Companion</h1>
+      <p>August 30–September 4, 2026 · Dublin, Galway, Cong, Mayo, Boyne Valley & Howth</p>
+    </div>
+    <button id="installBtn" class="ghost" hidden>Install App</button>
+  </header>
+
+  <nav id="dayTabs" class="day-tabs" aria-label="Trip days"></nav>
+
+  <main>
+    <section class="today-card">
+      <div>
+        <p class="eyebrow" id="dayLabel"></p>
+        <h2 id="dayTitle"></h2>
+        <p id="daySummary"></p>
+      </div>
+      <div class="today-actions">
+        <a id="routeBtn" class="primary" target="_blank" rel="noopener">Open Full Route</a>
+        <button id="resetBtn" class="secondary">Reset Checkmarks</button>
+      </div>
+    </section>
+
+    <section class="layout">
+      <div>
+        <div id="map" aria-label="Daily itinerary map"></div>
+        <div class="map-note">Map tiles require internet. Every stop also includes one-tap Apple and Google Maps navigation.</div>
+      </div>
+      <aside class="trip-tools">
+        <h3>Trip tools</h3>
+        <button id="showAllBtn">Show entire trip</button>
+        <button id="genealogyBtn">Joyce genealogy stops</button>
+        <button id="emergencyBtn">Ireland essentials</button>
+        <button id="notesBtn">My trip notes</button>
+      </aside>
+    </section>
+
+    <section>
+      <div class="section-heading">
+        <h2>Today’s tour</h2>
+        <span id="progressText"></span>
+      </div>
+      <div id="stopList" class="stop-list"></div>
+    </section>
+  </main>
+
+  <dialog id="modal">
+    <button class="close" aria-label="Close">×</button>
+    <div id="modalContent"></div>
+  </dialog>
+
+  <template id="stopTemplate">
+    <article class="stop-card">
+      <div class="stop-number"></div>
+      <div class="stop-body">
+        <div class="stop-topline">
+          <div>
+            <p class="stop-time"></p>
+            <h3 class="stop-name"></h3>
+          </div>
+          <label class="done-label"><input type="checkbox" class="done-box" /> Done</label>
+        </div>
+        <p class="stop-description"></p>
+        <details>
+          <summary>Tour guide notes</summary>
+          <div class="guide-notes"></div>
+        </details>
+        <div class="tips"></div>
+        <div class="stop-actions">
+          <a class="apple" target="_blank" rel="noopener">Apple Maps</a>
+          <a class="google" target="_blank" rel="noopener">Google Maps</a>
+          <button class="more">Details</button>
+        </div>
+      </div>
+    </article>
+  </template>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script src="app.js"></script>
+</body>
+</html>
