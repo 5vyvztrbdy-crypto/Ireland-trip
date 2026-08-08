@@ -1,0 +1,129 @@
+{
+  "$schema": "./journey.schema.json",
+  "id": "joyce-journey-2026",
+  "title": "Joyce Journey",
+  "subtitle": "Iceland + Ireland",
+  "year": 2026,
+  "dateRange": { "start": "2026-08-28", "end": "2026-09-04" },
+  "travelerIds": ["john-joyce", "travel-companion"],
+  "travelers": [
+    { "id": "john-joyce", "displayName": "John Joyce" },
+    { "id": "travel-companion", "displayName": "Travel companion" }
+  ],
+  "locations": [
+    { "id": "nashville", "name": "Nashville", "country": "United States", "mapQuery": "Nashville International Airport" },
+    { "id": "keflavik", "name": "Keflavík", "country": "Iceland", "mapQuery": "Keflavik Iceland" },
+    { "id": "hafnargata", "name": "Hafnargata", "locality": "Keflavík", "country": "Iceland", "mapQuery": "Hafnargata Keflavik" },
+    { "id": "dublin-airport", "name": "Dublin Airport", "country": "Ireland", "mapQuery": "Dublin Airport" },
+    { "id": "galway", "name": "Galway", "country": "Ireland", "mapQuery": "Galway Ireland" },
+    { "id": "leonardo-galway", "name": "Leonardo Hotel Galway", "address": "Quay Street, Galway, H91 E8D7", "country": "Ireland", "mapQuery": "Leonardo Hotel Galway" },
+    { "id": "cong", "name": "Cong", "country": "Ireland", "mapQuery": "Cong Ireland" },
+    { "id": "ryans-river-lodge", "name": "Ryan’s River Lodge", "locality": "Cong", "country": "Ireland", "mapQuery": "Ryan's River Lodge Cong" },
+    { "id": "athlone", "name": "Athlone", "country": "Ireland", "mapQuery": "Athlone Ireland" },
+    { "id": "athlone-flat", "name": "Cosy Relaxing Flat above Organic Grocer", "locality": "Athlone", "country": "Ireland", "mapQuery": "Athlone Ireland" },
+    { "id": "howth", "name": "Howth", "country": "Ireland", "mapQuery": "Howth Harbour" },
+    { "id": "king-sitric", "name": "King Sitric", "locality": "Howth", "country": "Ireland", "mapQuery": "King Sitric Howth" },
+    { "id": "newgrange", "name": "Brú na Bóinne Visitor Centre / Newgrange", "country": "Ireland", "mapQuery": "Bru na Boinne Visitor Centre" },
+    { "id": "boston", "name": "Boston Logan Airport", "country": "United States", "mapQuery": "Boston Logan Airport" }
+  ],
+  "notices": [],
+  "reservations": [
+    { "id": "res-fi824", "type": "flight", "title": "Icelandair FI824", "date": "2026-08-28", "startTime": "20:55", "endDate": "2026-08-29", "endTime": "08:40", "originLocationId": "nashville", "destinationLocationId": "keflavik", "anchorStatus": "protected", "confirmationStatus": "confirmed", "verificationSource": "traveler-verified", "publicNote": "Nashville to Keflavík." },
+    { "id": "res-keflavik-lodging", "type": "lodging", "title": "Hafnargata lodging", "date": "2026-08-29", "startTime": "14:00", "endDate": "2026-08-30", "endTime": "10:00", "locationId": "hafnargata", "anchorStatus": "fixed", "confirmationStatus": "confirmed", "verificationSource": "traveler-verified", "publicNote": "Hosted by Haydar." },
+    { "id": "res-fi416", "type": "flight", "title": "Icelandair FI416", "date": "2026-08-30", "startTime": "07:30", "endTime": "11:05", "originLocationId": "keflavik", "destinationLocationId": "dublin-airport", "anchorStatus": "protected", "confirmationStatus": "confirmed", "verificationSource": "traveler-verified", "publicNote": "Keflavík to Dublin." },
+    { "id": "res-budget-car", "type": "rental-car", "title": "Budget rental car", "date": "2026-08-30", "endDate": "2026-09-04", "locationId": "dublin-airport", "anchorStatus": "fixed", "confirmationStatus": "confirmed", "verificationSource": "traveler-verified", "publicNote": "Dublin Airport pickup and return. Confirm toll handling at pickup." },
+    { "id": "res-galway-lodging", "type": "lodging", "title": "Leonardo Hotel Galway", "date": "2026-08-30", "endDate": "2026-08-31", "locationId": "leonardo-galway", "anchorStatus": "fixed", "confirmationStatus": "confirmed", "verificationSource": "traveler-verified", "publicNote": "First Ireland lodging." },
+    { "id": "res-cong-lodging", "type": "lodging", "title": "Ryan’s River Lodge", "date": "2026-08-31", "startTime": "15:00", "endDate": "2026-09-02", "locationId": "ryans-river-lodge", "anchorStatus": "fixed", "confirmationStatus": "needs-verification", "verificationSource": "prototype", "publicNote": "Cong lodging; check-in details need traveler verification." },
+    { "id": "res-sheepdogs", "type": "experience", "title": "Joyce Country Sheepdogs", "date": "2026-09-01", "startTime": "09:30", "locationId": "cong", "anchorStatus": "fixed", "confirmationStatus": "needs-verification", "verificationSource": "prototype", "publicNote": "Primary sheepdog demonstration; confirm reservation details." },
+    { "id": "res-athlone-lodging", "type": "lodging", "title": "Cosy Relaxing Flat above Organic Grocer", "date": "2026-09-02", "startTime": "15:00", "endDate": "2026-09-03", "endTime": "12:00", "locationId": "athlone-flat", "anchorStatus": "fixed", "confirmationStatus": "confirmed", "verificationSource": "traveler-verified", "publicNote": "Hosted by Lynda. Athlone is the September 2 home base." },
+    { "id": "res-newgrange", "type": "timed-attraction", "title": "Brú na Bóinne Tour — Newgrange Chamber", "date": "2026-09-03", "startTime": "12:00", "locationId": "newgrange", "partySize": 2, "anchorStatus": "protected", "confirmationStatus": "confirmed", "verificationSource": "traveler-verified", "publicNote": "Tours begin through the visitor centre; advance arrival is required." },
+    { "id": "res-howth-lodging", "type": "lodging", "title": "King Sitric", "date": "2026-09-03", "startTime": "15:00", "endDate": "2026-09-04", "endTime": "11:00", "endTimeQualifier": "before", "locationId": "king-sitric", "anchorStatus": "fixed", "confirmationStatus": "confirmed", "verificationSource": "traveler-verified", "publicNote": "Howth lodging after Athlone." },
+    { "id": "res-king-sitric-dinner", "type": "dining", "title": "King Sitric Seafood Bar", "date": "2026-09-03", "startTime": "18:00", "locationId": "king-sitric", "partySize": 2, "anchorStatus": "protected", "confirmationStatus": "confirmed", "verificationSource": "traveler-verified", "publicNote": "Confirmed dinner featuring local seafood beside Howth Harbour." },
+    { "id": "res-jetblue-354", "type": "flight", "title": "JetBlue 354: Dublin to Boston", "date": "2026-09-04", "startTime": "10:40", "originLocationId": "dublin-airport", "destinationLocationId": "boston", "anchorStatus": "protected", "confirmationStatus": "needs-verification", "verificationSource": "prototype", "publicNote": "Transatlantic departure details need traveler verification." },
+    { "id": "res-jetblue-507", "type": "flight", "title": "JetBlue 507: Boston to Nashville", "date": "2026-09-04", "startTime": "16:55", "originLocationId": "boston", "destinationLocationId": "nashville", "anchorStatus": "protected", "confirmationStatus": "needs-verification", "verificationSource": "prototype", "publicNote": "Connection details need traveler verification." }
+  ],
+  "days": [
+    {
+      "id": "day-2026-08-29", "date": "2026-08-29", "displayDate": "Sat, Aug 29", "title": "Iceland: Fire, Water & Atlantic Coast", "baseLocationId": "keflavik", "reservationIds": ["res-fi824", "res-keflavik-lodging"],
+      "stops": [
+        { "id": "bridge-continents", "time": "8:30 AM", "title": "Bridge Between Continents", "description": "Walk between the North American and Eurasian tectonic plates.", "note": "Restroom plan: use facilities in Keflavík before departure; confirm seasonal facilities.", "mapQuery": "Bridge Between Continents Iceland", "flexibilityStatus": "flexible" },
+        { "id": "gunnuhver", "time": "9:30 AM", "title": "Gunnuhver Geothermal Area", "description": "Boardwalk views of powerful steam vents and boiling mud.", "note": "Short walk; remain on marked paths.", "mapQuery": "Gunnuhver Iceland", "flexibilityStatus": "flexible" },
+        { "id": "reykjanesviti", "time": "10:30 AM", "title": "Reykjanesviti Lighthouse & Valahnúkamöl", "description": "Lighthouse, sea stacks and dramatic Atlantic cliffs.", "note": "Use caution in wind and stay back from waves.", "mapQuery": "Reykjanesviti Lighthouse", "flexibilityStatus": "flexible" },
+        { "id": "iceland-lunch", "time": "12:00 PM", "title": "Lunch & Restroom Break", "description": "Return toward a staffed café or hotel area for a dependable restroom stop.", "note": "Build flexibility around IBS needs.", "mapQuery": "Keflavik restaurants", "flexibilityStatus": "flexible" },
+        { "id": "lagoon", "time": "1:30 PM", "title": "Blue Lagoon or Sky Lagoon Alternative", "description": "A comfortable, restroom-rich geothermal experience; advance booking required.", "note": "Check volcanic access and operating status before travel.", "mapQuery": "Blue Lagoon Iceland", "flexibilityStatus": "optional" },
+        { "id": "kleifarvatn", "time": "4:30 PM", "title": "Kleifarvatn Scenic Stop", "description": "Volcanic lake and stark lava scenery without a long drive.", "note": "Optional if energy and conditions permit.", "mapQuery": "Kleifarvatn Iceland", "flexibilityStatus": "optional" },
+        { "id": "keflavik-dinner", "time": "6:30 PM", "title": "Dinner in Keflavík", "description": "Relax near your lodging before the early flight.", "note": "Keep the evening easy.", "mapQuery": "Keflavik Iceland", "flexibilityStatus": "flexible" }
+      ],
+      "food": [{ "name": "Kaffi Duus", "description": "Harborfront Icelandic restaurant known for seafood, fish soup and familiar comfort dishes." }, { "name": "Library Bistro", "description": "Modern bistro with Icelandic ingredients, seafood and contemporary international dishes." }, { "name": "Olsen Olsen", "description": "Casual, relaxed choice for burgers, seafood and approachable family dining." }]
+    },
+    {
+      "id": "day-2026-08-30", "date": "2026-08-30", "displayDate": "Sun, Aug 30", "title": "Dublin Arrival to Galway", "baseLocationId": "galway", "reservationIds": ["res-fi416", "res-budget-car", "res-galway-lodging"],
+      "stops": [
+        { "id": "arrive-dublin", "description": "Arrival sequence: clear immigration, collect luggage and reach the rental desks.", "note": "Allow generous time.", "mapQuery": "Dublin Airport", "reservationId": "res-fi416", "reservationMoment": "end" },
+        { "id": "budget-pickup", "description": "Pickup sequence: inspect the car, photograph damage and confirm toll handling.", "note": "Google Maps will be the default navigation.", "mapQuery": "Budget Car Rental Dublin Airport", "reservationId": "res-budget-car" },
+        { "id": "clonmacnoise", "time": "2:00 PM", "title": "Clonmacnoise (optional)", "description": "Historic monastic ruins beside the River Shannon.", "note": "Only stop if flight and rental timing remain comfortable.", "mapQuery": "Clonmacnoise", "flexibilityStatus": "optional" },
+        { "id": "galway-checkin", "description": "Check-in sequence: settle in and walk the Latin Quarter.", "note": "Parking may require a public garage.", "mapQuery": "Leonardo Hotel Galway", "reservationId": "res-galway-lodging" }
+      ],
+      "food": [{ "name": "Ard Bia at Nimmos", "description": "Creative modern Irish cooking in an intimate riverside setting; strong seafood and seasonal dishes." }, { "name": "Kai", "description": "Farm-to-table restaurant with a frequently changing menu and imaginative Irish ingredients." }, { "name": "McDonagh’s", "description": "Classic, casual Galway fish and chips with an easygoing atmosphere." }]
+    },
+    {
+      "id": "day-2026-08-31", "date": "2026-08-31", "displayDate": "Mon, Aug 31", "title": "Galway to Cong", "baseLocationId": "ryans-river-lodge", "reservationIds": ["res-cong-lodging"],
+      "stops": [
+        { "id": "galway-departure", "time": "9:00 AM", "title": "Galway Departure", "description": "Depart after breakfast.", "note": "Pack rain layers where accessible.", "mapQuery": "Galway", "flexibilityStatus": "flexible" },
+        { "id": "ross-errilly", "time": "10:00 AM", "title": "Ross Errilly Friary", "description": "Atmospheric Franciscan friary ruins with cloisters and extensive surviving rooms.", "note": "Uneven ground; limited facilities.", "mapQuery": "Ross Errilly Friary", "flexibilityStatus": "flexible" },
+        { "id": "cong-abbey", "time": "12:00 PM", "title": "Cong Village & Abbey", "description": "Explore the abbey ruins, river walk and village.", "note": "Public facilities and cafés make this a useful comfort stop.", "mapQuery": "Cong Abbey", "flexibilityStatus": "flexible" },
+        { "id": "ryans-checkin", "description": "Check-in sequence: settle into Cong and confirm the next day’s plans.", "note": "Check-in details need traveler verification.", "mapQuery": "Ryan's River Lodge Cong", "reservationId": "res-cong-lodging" }
+      ],
+      "food": [{ "name": "Pat Cohan’s Bar", "description": "Traditional pub food in the village landmark associated with The Quiet Man." }, { "name": "Wilde’s at The Lodge at Ashford", "description": "Refined Irish dining with seasonal ingredients in an elegant lakeside setting." }, { "name": "The Crowe’s Nest", "description": "Casual pub-style menu and relaxed local atmosphere in Cong." }]
+    },
+    {
+      "id": "day-2026-09-01", "date": "2026-09-01", "displayDate": "Tue, Sep 1", "title": "Joyce Country & Dogs Bay", "baseLocationId": "cong", "reservationIds": ["res-sheepdogs", "res-cong-lodging"],
+      "stops": [
+        { "id": "joyce-sheepdogs", "description": "Your primary sheepdog demonstration in the Connemara landscape.", "note": "Arrive early and confirm reservation details.", "mapQuery": "Joyce Country Sheepdogs", "reservationId": "res-sheepdogs" },
+        { "id": "clifden-lunch", "time": "12:00 PM", "title": "Clifden Lunch", "description": "A practical lunch and restroom stop before the coast.", "note": "Refuel if needed.", "mapQuery": "Clifden Ireland", "flexibilityStatus": "flexible" },
+        { "id": "dogs-bay", "time": "1:30 PM", "title": "Dogs Bay Beach", "description": "White shell-sand beach with vivid turquoise water.", "note": "Weather-dependent; no need to rush.", "mapQuery": "Dog's Bay Beach Ireland", "flexibilityStatus": "optional" },
+        { "id": "return-cong", "time": "4:30 PM", "title": "Scenic Return to Cong", "description": "Return through Connemara with optional photography pull-offs.", "note": "Use Pause whenever a moment deserves more time.", "mapQuery": "Cong Ireland", "flexibilityStatus": "flexible" }
+      ],
+      "food": [{ "name": "Pat Cohan’s Bar", "description": "Reliable traditional pub dishes and a historic village atmosphere." }, { "name": "The Lodge at Ashford Castle", "description": "Polished Irish and European cuisine for a more special evening." }, { "name": "Lydon’s Lodge Restaurant", "description": "Comfortable local hotel dining with Irish favorites and seafood options." }]
+    },
+    {
+      "id": "day-2026-09-02", "date": "2026-09-02", "displayDate": "Wed, Sep 2", "title": "Castlebar Heritage Day to Athlone", "baseLocationId": "athlone", "reservationIds": ["res-athlone-lodging"],
+      "stops": [
+        { "id": "depart-cong", "time": "8:30 AM", "title": "Depart Cong", "description": "Begin the day with genealogy stops before continuing to Athlone.", "note": "Keep documents and notes together.", "mapQuery": "Cong Ireland", "flexibilityStatus": "flexible" },
+        { "id": "castlebar-library", "time": "9:30 AM", "title": "Castlebar Library / Local Studies", "description": "Research Joyce records, maps, newspapers and local-history leads.", "note": "Confirm opening hours before arrival.", "mapQuery": "Castlebar Library", "flexibilityStatus": "flexible" },
+        { "id": "castlebar-walk", "time": "11:00 AM", "title": "Castlebar Heritage Walk", "description": "Explore the town center, churches and possible record locations.", "note": "Photograph inscriptions and record exact locations.", "mapQuery": "Castlebar Ireland", "flexibilityStatus": "flexible" },
+        { "id": "castlebar-lunch", "time": "1:00 PM", "title": "Lunch & Restroom Break", "description": "Take a deliberate comfort stop before continuing to Athlone.", "note": "Avoid rushing the afternoon.", "mapQuery": "Castlebar restaurants", "flexibilityStatus": "flexible" },
+        { "id": "athlone-checkin", "description": "Check-in sequence: settle into the lodging.", "note": "Athlone is the September 2 home base.", "mapQuery": "Athlone Ireland", "reservationId": "res-athlone-lodging" }
+      ],
+      "food": []
+    },
+    {
+      "id": "day-2026-09-03", "date": "2026-09-03", "displayDate": "Thu, Sep 3", "title": "Newgrange, Tara & Howth Evening", "baseLocationId": "howth", "reservationIds": ["res-athlone-lodging", "res-newgrange", "res-howth-lodging", "res-king-sitric-dinner"],
+      "stops": [
+        { "id": "depart-athlone", "time": "Morning", "title": "Depart Athlone", "description": "Check out and continue toward the timed Brú na Bóinne visit.", "note": "Leave enough margin for visitor-centre check-in.", "mapQuery": "Athlone Ireland", "flexibilityStatus": "fixed" },
+        { "id": "newgrange-tour", "description": "Arrival guidance: check in through the official visitor centre.", "note": "Tours do not start at the monument parking area.", "mapQuery": "Bru na Boinne Visitor Centre", "reservationId": "res-newgrange" },
+        { "id": "hill-of-tara", "time": "1:00 PM", "title": "Hill of Tara", "description": "Ancient ceremonial landscape associated with Ireland’s high kings.", "note": "Outdoor site; visitor-center hours can be seasonal. Timing must remain secondary to the Newgrange anchor.", "mapQuery": "Hill of Tara", "flexibilityStatus": "flexible" },
+        { "id": "howth-checkin", "description": "Check-in sequence: settle in by Howth Harbour.", "note": "Howth follows Athlone on September 3.", "mapQuery": "King Sitric Howth", "reservationId": "res-howth-lodging" },
+        { "id": "howth-harbor", "time": "4:30 PM", "title": "Howth Harbour", "description": "Harbor walk and time to refresh before dinner.", "note": "Pause the schedule if the coast is beautiful.", "mapQuery": "Howth Harbour", "flexibilityStatus": "flexible" },
+        { "id": "king-sitric-dinner", "description": "Dinner sequence: local seafood beside Howth Harbour.", "note": "Allow time to refresh after check-in.", "mapQuery": "King Sitric Seafood Bar", "reservationId": "res-king-sitric-dinner" }
+      ],
+      "food": [{ "name": "King Sitric Seafood Bar", "description": "Your confirmed choice: celebrated local seafood in a relaxed harbor setting." }, { "name": "Aqua", "description": "Upscale contemporary seafood with broad views across Howth Harbour." }, { "name": "The Brass Monkey", "description": "Small-plates style seafood, Mediterranean influences and a lively harbor atmosphere." }, { "name": "Beshoff Bros", "description": "Casual, popular fish and chips near the Howth waterfront." }, { "name": "The Oar House", "description": "Seafood-focused Howth harbor restaurant in a relaxed maritime setting." }]
+    },
+    {
+      "id": "day-2026-09-04", "date": "2026-09-04", "displayDate": "Fri, Sep 4", "title": "Departure for Home", "baseLabel": "Travel day", "reservationIds": ["res-budget-car", "res-jetblue-354", "res-jetblue-507"],
+      "stops": [
+        { "id": "return-budget", "description": "Return sequence: return the rental car at Dublin Airport.", "note": "Follow the traveler’s departure plan.", "mapQuery": "Budget Car Rental Dublin Airport", "reservationId": "res-budget-car", "reservationMoment": "end" },
+        { "id": "jetblue-354", "description": "Transatlantic departure.", "note": "Check airline guidance for airport arrival time and U.S. preclearance.", "mapQuery": "Dublin Airport Terminal 2", "reservationId": "res-jetblue-354" },
+        { "id": "jetblue-507", "description": "Connect onward to Nashville.", "note": "Verify terminal and connection details in the airline app.", "mapQuery": "Boston Logan Airport", "reservationId": "res-jetblue-507" }
+      ],
+      "food": [{ "name": "Dublin Airport", "description": "Use an airside breakfast option after security and U.S. preclearance." }, { "name": "Boston Logan", "description": "Choose a quick terminal meal during the connection if time permits." }, { "name": "Homecoming meal", "description": "Keep the final choice flexible based on arrival time and energy." }]
+    }
+  ],
+  "heritageNotes": [
+    "Castlebar Library and Local Studies: ask for valuation maps, local newspapers, parish resources and Joyce surname references.",
+    "Photograph every useful record with its title, page number, archive name and date.",
+    "Record exact churchyard and headstone locations rather than relying on memory.",
+    "Ask local staff which Catholic parishes served Castlebar-area townlands around 1860.",
+    "Keep discoveries separate from assumptions until names, ages, occupations and family relationships align."
+  ]
+}

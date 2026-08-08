@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://storiedjourney.example/schemas/journey.schema.json",
+  "title": "Public Journey",
+  "description": "Deployable journey data. Private reservation identifiers and source material are prohibited.",
+  "type": "object",
+  "required": ["id", "title", "dateRange", "travelerIds", "travelers", "locations", "reservations", "days"],
+  "properties": {
+    "id": { "$ref": "#/$defs/id" },
+    "title": { "type": "string", "minLength": 1 },
+    "subtitle": { "type": "string" },
+    "year": { "type": "integer" },
+    "dateRange": { "$ref": "#/$defs/dateRange" },
+    "travelerIds": { "type": "array", "items": { "$ref": "#/$defs/id" }, "minItems": 1 },
+    "travelers": { "type": "array", "items": { "$ref": "#/$defs/traveler" }, "minItems": 1 },
+    "locations": { "type": "array", "items": { "$ref": "#/$defs/location" }, "minItems": 1 },
+    "notices": { "type": "array", "items": { "$ref": "#/$defs/notice" } },
+    "reservations": { "type": "array", "items": { "$ref": "#/$defs/publicReservation" }, "minItems": 1 },
+    "days": { "type": "array", "items": { "$ref": "#/$defs/day" }, "minItems": 1 },
+    "heritageNotes": { "type": "array", "items": { "type": "string" } }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" },
+    "date": { "type": "string", "format": "date" },
+    "time": { "type": "string", "pattern": "^(?:[01][0-9]|2[0-3]):[0-5][0-9]$" },
+    "dateRange": { "type": "object", "required": ["start", "end"], "properties": { "start": { "$ref": "#/$defs/date" }, "end": { "$ref": "#/$defs/date" } }, "additionalProperties": false },
+    "traveler": { "type": "object", "required": ["id", "displayName"], "properties": { "id": { "$ref": "#/$defs/id" }, "displayName": { "type": "string", "minLength": 1 } }, "additionalProperties": false },
+    "location": { "type": "object", "required": ["id", "name"], "properties": { "id": { "$ref": "#/$defs/id" }, "name": { "type": "string", "minLength": 1 }, "address": { "type": "string" }, "locality": { "type": "string" }, "country": { "type": "string" }, "mapQuery": { "type": "string" } }, "additionalProperties": false },
+    "notice": { "type": "object", "required": ["id", "title", "message", "status"], "properties": { "id": { "$ref": "#/$defs/id" }, "title": { "type": "string" }, "message": { "type": "string" }, "status": { "enum": ["information", "needs-verification"] } }, "additionalProperties": false },
+    "publicReservation": {
+      "type": "object",
+      "required": ["id", "type", "title", "date", "anchorStatus", "confirmationStatus", "verificationSource"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" }, "type": { "enum": ["flight", "lodging", "rental-car", "timed-attraction", "dining", "experience", "transport"] }, "title": { "type": "string", "minLength": 1 },
+        "date": { "$ref": "#/$defs/date" }, "startTime": { "$ref": "#/$defs/time" }, "endDate": { "$ref": "#/$defs/date" }, "endTime": { "$ref": "#/$defs/time" }, "endTimeQualifier": { "enum": ["before", "by", "approximately"] },
+        "locationId": { "$ref": "#/$defs/id" }, "originLocationId": { "$ref": "#/$defs/id" }, "destinationLocationId": { "$ref": "#/$defs/id" }, "partySize": { "type": "integer", "minimum": 1 },
+        "anchorStatus": { "$ref": "#/$defs/anchorStatus" }, "confirmationStatus": { "$ref": "#/$defs/confirmationStatus" }, "verificationSource": { "enum": ["traveler-verified", "prototype", "prototype-and-traveler-context"] }, "publicNote": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "day": {
+      "type": "object", "required": ["id", "date", "displayDate", "title", "reservationIds", "stops", "food"],
+      "properties": { "id": { "$ref": "#/$defs/id" }, "date": { "$ref": "#/$defs/date" }, "displayDate": { "type": "string" }, "title": { "type": "string", "minLength": 1 }, "baseLocationId": { "$ref": "#/$defs/id" }, "baseLabel": { "type": "string" }, "reservationIds": { "type": "array", "items": { "$ref": "#/$defs/id" } }, "stops": { "type": "array", "items": { "$ref": "#/$defs/stop" }, "minItems": 1 }, "food": { "type": "array", "items": { "$ref": "#/$defs/food" } } },
+      "oneOf": [{ "required": ["baseLocationId"] }, { "required": ["baseLabel"] }], "additionalProperties": false
+    },
+    "stop": { "type": "object", "required": ["id", "description", "note", "mapQuery"], "properties": { "id": { "$ref": "#/$defs/id" }, "time": { "type": "string" }, "title": { "type": "string", "minLength": 1 }, "description": { "type": "string" }, "note": { "type": "string" }, "mapQuery": { "type": "string" }, "reservationId": { "$ref": "#/$defs/id" }, "reservationMoment": { "enum": ["start", "end"] }, "flexibilityStatus": { "$ref": "#/$defs/anchorStatus" } }, "oneOf": [{ "required": ["reservationId"], "not": { "anyOf": [{ "required": ["title"] }, { "required": ["time"] }, { "required": ["flexibilityStatus"] }] } }, { "required": ["title", "time", "flexibilityStatus"], "not": { "anyOf": [{ "required": ["reservationId"] }, { "required": ["reservationMoment"] }] } }], "additionalProperties": false },
+    "food": { "type": "object", "required": ["name", "description"], "properties": { "name": { "type": "string" }, "description": { "type": "string" } }, "additionalProperties": false },
+    "anchorStatus": { "enum": ["protected", "fixed", "flexible", "optional"] },
+    "confirmationStatus": { "enum": ["confirmed", "needs-verification"] }
+  }
+}

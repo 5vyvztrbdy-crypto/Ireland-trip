@@ -17,7 +17,7 @@ button,a{font:inherit}.splash{position:fixed;inset:0;z-index:99;background:linea
 .primary,.secondary,.ghost{border:0;border-radius:14px;padding:12px 15px;font-weight:750;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:7px}
 .primary{background:var(--green);color:white}.splash .primary{background:var(--gold);color:#18342d;margin-top:18px}.secondary{background:#e7eee9;color:var(--green)}.ghost{background:transparent;color:var(--green);border:1px solid #c8d4ce}
 header{background:var(--green);color:white;padding:20px 18px 16px;position:sticky;top:0;z-index:10}header h1{font-family:Georgia,serif;margin:2px 0;font-size:28px}
-.alert{margin:14px;background:#fff3d6;border-left:5px solid #d09324;padding:13px;border-radius:10px;font-size:14px}
+.alert{margin:14px;background:#fff3d6;border-left:5px solid #d09324;padding:13px;border-radius:10px;font-size:14px}.alert:empty{display:none}
 nav{display:flex;overflow:auto;gap:7px;padding:10px 12px;background:#f9f7f1;position:sticky;top:82px;z-index:9;border-bottom:1px solid #ddd}
 nav button{white-space:nowrap;border:0;background:#e8ebe7;padding:9px 12px;border-radius:999px;font-weight:700}nav button.active{background:var(--green);color:white}
 main{max-width:760px;margin:auto;padding:12px 12px 80px}.view{display:none}.view.active{display:block}
@@ -40,180 +40,23 @@ small{color:var(--muted)}.danger{color:var(--danger);font-weight:800}
   <h1>Joyce Journey</h1>
   <div class="tag">Every journey deserves an epic plan and an unforgettable story.</div>
   <p>Plan · Discover · Remember</p>
-  <button class="primary" onclick="startApp()">Begin Your Journey</button>
+  <button id="startApp" class="primary">Begin Your Journey</button>
 </div>
-
 <header><div class="eyebrow">ICELAND + IRELAND · 2026</div><h1>Joyce Journey</h1></header>
-<div class="alert"><b>Travel alert:</b> The Dublin rental-car return is listed at 10:00 AM for a 10:40 AM transatlantic flight. Please arrange a much earlier return.</div>
+<div id="notices" class="alert"></div>
 <nav id="nav">
 <button class="active" data-v="today">Today</button><button data-v="journey">Journey</button><button data-v="reservations">Reservations</button><button data-v="journal">Journal</button><button data-v="heritage">Heritage</button>
 </nav>
 <main>
-<section id="today" class="view active"></section>
+<section id="today" class="view active"><div class="card">Loading journey…</div></section>
 <section id="journey" class="view"></section>
 <section id="reservations" class="view"></section>
 <section id="journal" class="view"></section>
 <section id="heritage" class="view"></section>
 </main>
-<button class="fab" onclick="pauseTrip()">⏸ Pause</button>
-<dialog id="dlg"><button class="close" onclick="dlg.close()">×</button><div id="dlgBody"></div></dialog>
-
-<script>
-const days=[
-{date:"Sat, Aug 29",title:"Iceland: Fire, Water & Atlantic Coast",base:"Keflavík",stops:[
-["8:30 AM","Bridge Between Continents","Walk between the North American and Eurasian tectonic plates.","Restroom plan: use facilities in Keflavík before departure; confirm seasonal facilities.","Bridge Between Continents Iceland"],
-["9:30 AM","Gunnuhver Geothermal Area","Boardwalk views of powerful steam vents and boiling mud.","Short walk; remain on marked paths.","Gunnuhver Iceland"],
-["10:30 AM","Reykjanesviti Lighthouse & Valahnúkamöl","Lighthouse, sea stacks and dramatic Atlantic cliffs.","Use caution in wind and stay back from waves.","Reykjanesviti Lighthouse"],
-["12:00 PM","Lunch & Restroom Break","Return toward a staffed café or hotel area for a dependable restroom stop.","Build flexibility around IBS needs.","Keflavik restaurants"],
-["1:30 PM","Blue Lagoon or Sky Lagoon Alternative","A comfortable, restroom-rich geothermal experience; advance booking required.","Check volcanic access and operating status before travel.","Blue Lagoon Iceland"],
-["4:30 PM","Kleifarvatn Scenic Stop","Volcanic lake and stark lava scenery without a long drive.","Optional if energy and conditions permit.","Kleifarvatn Iceland"],
-["6:30 PM","Dinner in Keflavík","Relax near your lodging before the early flight.","Keep the evening easy.","Keflavik Iceland"]
-],food:[
-["Kaffi Duus","Harborfront Icelandic restaurant known for seafood, fish soup and familiar comfort dishes."],
-["Library Bistro","Modern bistro with Icelandic ingredients, seafood and contemporary international dishes."],
-["Olsen Olsen","Casual, relaxed choice for burgers, seafood and approachable family dining."]
-]},
-{date:"Sun, Aug 30",title:"Dublin Arrival to Galway",base:"Galway",stops:[
-["11:05 AM","Arrive Dublin Airport","Clear immigration, collect luggage and reach the rental desks." ,"Allow generous time.","Dublin Airport"],
-["12:00 PM","Budget Rental Car Pickup","Inspect the car, photograph damage and confirm toll handling.","Google Maps will be the default navigation.","Budget Car Rental Dublin Airport"],
-["2:00 PM","Clonmacnoise (optional)","Historic monastic ruins beside the River Shannon.","Only stop if flight and rental timing remain comfortable.","Clonmacnoise"],
-["5:30 PM","Galway Check-in","Settle in and walk the Latin Quarter.","Parking may require a public garage.","Galway Latin Quarter"]
-],food:[
-["Ard Bia at Nimmos","Creative modern Irish cooking in an intimate riverside setting; strong seafood and seasonal dishes."],
-["Kai","Farm-to-table restaurant with a frequently changing menu and imaginative Irish ingredients."],
-["McDonagh’s","Classic, casual Galway fish and chips with an easygoing atmosphere."]
-]},
-{date:"Mon, Aug 31",title:"Galway to Cong",base:"Ryan’s River Lodge, Cong",stops:[
-["9:00 AM","Galway Departure","Depart after breakfast.","Pack rain layers where accessible.","Galway"],
-["10:00 AM","Ross Errilly Friary","Atmospheric Franciscan friary ruins with cloisters and extensive surviving rooms.","Uneven ground; limited facilities.","Ross Errilly Friary"],
-["12:00 PM","Cong Village & Abbey","Explore the abbey ruins, river walk and village.","Public facilities and cafés make this a useful comfort stop.","Cong Abbey"],
-["3:00 PM","Ryan’s River Lodge Check-in","Settle into Cong and confirm the next day’s plans.","Early check-in previously confirmed.","Ryan's River Lodge Cong"]
-],food:[
-["Pat Cohan’s Bar","Traditional pub food in the village landmark associated with The Quiet Man."],
-["Wilde’s at The Lodge at Ashford","Refined Irish dining with seasonal ingredients in an elegant lakeside setting."],
-["The Crowe’s Nest","Casual pub-style menu and relaxed local atmosphere in Cong."]
-]},
-{date:"Tue, Sep 1",title:"Joyce Country & Dogs Bay",base:"Cong",stops:[
-["9:30 AM","Joyce Country Sheepdogs","Your primary sheepdog demonstration in the Connemara landscape.","Arrive early and confirm reservation details.","Joyce Country Sheepdogs"],
-["12:00 PM","Clifden Lunch","A practical lunch and restroom stop before the coast.","Refuel if needed.","Clifden Ireland"],
-["1:30 PM","Dogs Bay Beach","White shell-sand beach with vivid turquoise water.","Weather-dependent; no need to rush.","Dog's Bay Beach Ireland"],
-["4:30 PM","Scenic Return to Cong","Return through Connemara with optional photography pull-offs.","Use Pause whenever a moment deserves more time.","Cong Ireland"]
-],food:[
-["Pat Cohan’s Bar","Reliable traditional pub dishes and a historic village atmosphere."],
-["The Lodge at Ashford Castle","Polished Irish and European cuisine for a more special evening."],
-["Lydon’s Lodge Restaurant","Comfortable local hotel dining with Irish favorites and seafood options."]
-]},
-{date:"Wed, Sep 2",title:"Castlebar Heritage Day to Howth",base:"Howth",stops:[
-["8:30 AM","Depart Cong","Begin the eastbound day with genealogy stops.","Keep documents and notes together.","Cong Ireland"],
-["9:30 AM","Castlebar Library / Local Studies","Research Joyce records, maps, newspapers and local-history leads.","Confirm opening hours before arrival.","Castlebar Library"],
-["11:00 AM","Castlebar Heritage Walk","Explore the town center, churches and possible record locations.","Photograph inscriptions and record exact locations.","Castlebar Ireland"],
-["1:00 PM","Lunch & Restroom Break","Take a deliberate comfort stop before the long eastbound drive.","Avoid rushing the afternoon.","Castlebar restaurants"],
-["5:30 PM","Howth Check-in","Settle in by the harbor.","Use Google Maps for the exact lodging address.","Howth Harbour"]
-],food:[
-["Aqua","Contemporary seafood and European cooking with panoramic harbor views."],
-["Beshoff Bros","Casual, popular fish and chips near the waterfront."],
-["The Oar House","Seafood-focused harbor restaurant in a relaxed maritime setting."]
-]},
-{date:"Thu, Sep 3",title:"Newgrange, Tara & Howth Evening",base:"Howth",stops:[
-["8:00 AM","Depart Howth","Leave enough margin for the timed Brú na Bóinne visit.","Tickets and visitor-center check-in are essential.","Howth"],
-["9:15 AM","Brú na Bóinne Visitor Centre / Newgrange","The official starting point for Newgrange tours.","Advance booking required; tours do not start at the monument parking area.","Bru na Boinne Visitor Centre"],
-["1:00 PM","Hill of Tara","Ancient ceremonial landscape associated with Ireland’s high kings.","Outdoor site; visitor-center hours can be seasonal.","Hill of Tara"],
-["4:30 PM","Return to Howth","Harbor walk and time to refresh before dinner.","Pause the schedule if the coast is beautiful.","Howth Harbour"],
-["6:00 PM","King Sitric Seafood Bar Reservation","Confirmed dinner reservation featuring local seafood beside Howth Harbour.","Reservation already made.","King Sitric Seafood Bar"]
-],food:[
-["King Sitric Seafood Bar","Your confirmed choice: celebrated local seafood in a relaxed harbor setting."],
-["Aqua","Upscale contemporary seafood with broad views across Howth Harbour."],
-["The Brass Monkey","Small-plates style seafood, Mediterranean influences and a lively harbor atmosphere."]
-]},
-{date:"Fri, Sep 4",title:"Departure for Home",base:"Travel day",stops:[
-["Early AM","Return Budget Rental Car","Return must be substantially earlier than the currently listed 10:00 AM time.","Resolve this before departure day.","Budget Car Rental Dublin Airport"],
-["10:40 AM","JetBlue 354: Dublin to Boston","Transatlantic departure.","Check airline guidance for airport arrival time and U.S. preclearance.","Dublin Airport Terminal 2"],
-["4:55 PM","JetBlue 507: Boston to Nashville","Connect onward to Nashville.","Verify terminal and connection details in the airline app.","Boston Logan Airport"]
-],food:[
-["Dublin Airport","Use an airside breakfast option after security and U.S. preclearance."],
-["Boston Logan","Choose a quick terminal meal during the connection if time permits."],
-["Homecoming meal","Keep the final choice flexible based on arrival time and energy."]
-]}
-];
-
-const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
-function startApp(){localStorage.setItem("jjStarted","1");$("#splash").classList.add("hide")}
-if(localStorage.getItem("jjStarted")) $("#splash").classList.add("hide");
-$("#nav").onclick=e=>{if(e.target.dataset.v){$$("nav button").forEach(x=>x.classList.remove("active"));e.target.classList.add("active");$$(".view").forEach(x=>x.classList.remove("active"));$("#"+e.target.dataset.v).classList.add("active")}}
-function maps(q){return "https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(q)}
-function renderToday(){
- const d=days[0]; $("#today").innerHTML=`<div class="hero"><div class="eyebrow">NEXT CHAPTER</div><h2>${d.title}</h2><p>${d.date} · ${d.base}</p><button class="primary" onclick="openDay(0)">Start Today’s Adventure</button></div>
- <div class="card"><h3>Built for your pace</h3><p>Restroom-aware stops, Google Maps navigation, flexible timing and a Pause button that keeps the itinerary in service of the traveler.</p></div>
- <div class="card pause"><h3>The best journeys aren’t rushed.</h3><p>Take your time. We’ll be here when you’re ready.</p></div>`;
-}
-function renderJourney(){
- $("#journey").innerHTML=`<div class="hero"><div class="eyebrow">YOUR COMPLETE ROUTE</div><h2>Iceland + Ireland</h2><p>Seven chapters, designed around nature, history, heritage and room for unexpected joy.</p></div>`+
- days.map((d,i)=>`<button class="day-btn" onclick="openDay(${i})"><strong>${d.date} — ${d.title}</strong><span>${d.stops.length} planned moments · Evening in ${d.base}</span></button>`).join("");
-}
-function openDay(i){
- const d=days[i];
- $("#dlgBody").innerHTML=`<div class="eyebrow">${d.date}</div><h2>${d.title}</h2><p class="muted">Evening base: ${d.base}</p>`+
- d.stops.map((s,n)=>`<div class="card stop"><div class="num">${n+1}</div><div><small>${s[0]}</small><h3>${s[1]}</h3><p>${s[2]}</p><div class="chips"><span class="chip">🚻 ${s[3]}</span></div><div class="actions"><a class="primary" href="${maps(s[4])}" target="_blank">Google Maps</a><button class="secondary" onclick="journalPrompt('${esc(s[1])}')">Complete Stop</button></div></div></div>`).join("")+
- `<div class="card"><h3>Three dinner choices</h3>${d.food.map((f,n)=>`<div class="restaurant"><b>${n+1}. ${f[0]}</b><span>${f[1]}</span><div class="actions"><a class="ghost" href="${maps(f[0]+" "+d.base)}" target="_blank">Google Maps</a></div></div>`).join("")}</div>`;
- dlg.showModal();
-}
-function esc(s){return s.replaceAll("'","\\'")}
-function renderReservations(){
- const items=[
- ["Outbound flight","Icelandair FI824 · Nashville to Reykjavík · Aug 28 · 8:55 PM departure"],
- ["Iceland lodging","Keflavík Airbnb · Aug 29"],
- ["Ireland flight","Icelandair FI416 · Reykjavík to Dublin · Aug 30 · 7:30 AM–11:05 AM"],
- ["Ireland rental car","Budget · Dublin Airport · Aug 30 to Sep 4"],
- ["Cong lodging","Ryan’s River Lodge · Aug 31–Sep 2 · early check-in confirmed"],
- ["Howth lodging","Howth accommodation · Sep 2–4"],
- ["Confirmed dinner","King Sitric Seafood Bar · Sep 3 · 6:00 PM"],
- ["Return flight","JetBlue 354 DUB–BOS · Sep 4 · 10:40 AM; JetBlue 507 BOS–BNA · 4:55 PM"]
- ];
- $("#reservations").innerHTML=`<div class="hero"><div class="eyebrow">ALL IN ONE PLACE</div><h2>Reservations</h2><p>Public itinerary details are shown below. Save private confirmation numbers only on this device.</p></div>`+
- items.map(x=>`<div class="card"><h3>${x[0]}</h3><p>${x[1]}</p></div>`).join("")+
- `<div class="card"><h3>Private confirmation notes</h3><p class="muted">Stored only in this browser on this phone. Do not erase Safari website data without exporting your notes first.</p><textarea id="privateNotes" rows="8" placeholder="Confirmation numbers, contact names, addresses..."></textarea><button class="primary" onclick="savePrivate()">Save privately</button></div>`;
- setTimeout(()=>$("#privateNotes").value=localStorage.getItem("jjPrivate")||"",0)
-}
-function savePrivate(){localStorage.setItem("jjPrivate",$("#privateNotes").value);alert("Saved privately on this device.")}
-function journalPrompt(stop){
- $("#dlgBody").innerHTML=`<div class="eyebrow">CAPTURE THE MOMENT</div><h2>${stop}</h2>
- <label>Rating</label><select id="jr"><option>5 — Unforgettable</option><option>4 — Excellent</option><option>3 — Good</option><option>2 — Not for us</option><option>1 — Disappointing</option></select>
- <label>What do you want to remember?</label><textarea id="jm" rows="4"></textarea>
- <label>Favorite moment</label><input id="jf">
- <label><input id="js" type="checkbox" style="width:auto"> ✨ This made the journey — an unexpected joy</label>
- <label>Add photos</label><input id="jp" type="file" accept="image/*" multiple>
- <button class="primary" onclick="saveJournal('${esc(stop)}')">Add to My Story</button>`;
- dlg.showModal();
-}
-function saveJournal(stop){
- const arr=JSON.parse(localStorage.getItem("jjJournal")||"[]");
- const files=$("#jp").files;
- arr.push({stop,date:new Date().toLocaleString(),rating:$("#jr").value,memory:$("#jm").value,favorite:$("#jf").value,surprise:$("#js").checked,photoCount:files.length});
- localStorage.setItem("jjJournal",JSON.stringify(arr));dlg.close();renderJournal();alert("Added to Your Story. Photo count is recorded; selected photos remain in your Photos library.");
-}
-function renderJournal(){
- const arr=JSON.parse(localStorage.getItem("jjJournal")||"[]");
- $("#journal").innerHTML=`<div class="hero"><div class="eyebrow">PLAN · DISCOVER · REMEMBER</div><h2>Your Story</h2><p>Quick reflections become the foundation for your private photo journal and future travel article.</p></div>
- <div class="card"><button class="primary" onclick="journalPrompt('A moment from today')">Add a Memory</button> <button class="secondary" onclick="exportJournal()">Download Backup</button></div>`+
- (arr.length?arr.map(x=>`<div class="card"><div class="eyebrow">${x.date}</div><h3>${x.stop}</h3><p><b>${x.rating}</b></p><p>${x.memory||""}</p><p><i>${x.favorite||""}</i></p>${x.surprise?'<p>✨ <b>This made the journey</b></p>':""}<small>${x.photoCount} photo(s) selected</small></div>`).join(""):`<div class="card"><h3>Your story begins here</h3><p>Complete a stop or add a memory. At the end of the journey, these reflections will become the raw material for “Your Story Is Ready.”</p></div>`);
-}
-function exportJournal(){
- const data=localStorage.getItem("jjJournal")||"[]";const blob=new Blob([data],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="joyce-journey-journal-backup.json";a.click()
-}
-function renderHeritage(){
- $("#heritage").innerHTML=`<div class="hero"><div class="eyebrow">JOYCE FAMILY HERITAGE</div><h2>Follow the records home</h2><p>Castlebar, Cong and Joyce Country research notes for John M. Joyce and the wider family story.</p></div>
- ${["Castlebar Library and Local Studies: ask for valuation maps, local newspapers, parish resources and Joyce surname references.","Photograph every useful record with its title, page number, archive name and date.","Record exact churchyard and headstone locations rather than relying on memory.","Ask local staff which Catholic parishes served Castlebar-area townlands around 1860.","Keep discoveries separate from assumptions until names, ages, occupations and family relationships align."].map((x,i)=>`<div class="card"><h3>${i+1}. Research step</h3><p>${x}</p></div>`).join("")}`;
-}
-function pauseTrip(){
- $("#dlgBody").innerHTML=`<div class="mark">⏸</div><h2>The best journeys aren’t rushed.</h2><p>Take your time. The itinerary serves you—not the other way around.</p><p>When you are ready, continue from the next meaningful moment rather than worrying about being “late.”</p><button class="primary" onclick="dlg.close()">Continue when ready</button>`;dlg.showModal()
-}
-function surprise(){
- const options=["A quiet coastal viewpoint","A ruined abbey or castle","A local bakery or café","A harbor walk","A historic churchyard","A scenic photo pull-off"];
- const pick=options[Math.floor(Math.random()*options.length)];
- $("#dlgBody").innerHTML=`<div class="mark">✦</div><h2>Surprise Me</h2><p>Look nearby for: <b>${pick}</b>.</p><p class="muted">This preview does not search live businesses yet. Use Google Maps’ “Explore nearby” after opening today’s route, and keep the detour within your available time and restroom comfort range.</p><a class="primary" href="${maps(pick+" near me")}" target="_blank">Explore in Google Maps</a>`;dlg.showModal()
-}
-renderToday();renderJourney();renderReservations();renderJournal();renderHeritage();
-const s=document.createElement("button");s.className="fab";s.style.right="110px";s.textContent="✦ Surprise";s.onclick=surprise;document.body.appendChild(s);
-</script>
+<button id="surpriseButton" class="fab" style="right:110px">✦ Surprise</button>
+<button id="pauseButton" class="fab">⏸ Pause</button>
+<dialog id="dlg"><button id="closeDialog" class="close" aria-label="Close">×</button><div id="dlgBody"></div></dialog>
+<script src="js/app.js" defer></script>
 </body>
 </html>

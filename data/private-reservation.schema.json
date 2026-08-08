@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://storiedjourney.example/schemas/private-reservation.schema.json",
+  "title": "Local-only Private Reservation Extension",
+  "description": "Model definition only. Instances belong in ignored local storage and must never be deployed.",
+  "type": "object",
+  "required": ["reservationId"],
+  "properties": {
+    "reservationId": { "type": "string" },
+    "bookingReference": { "type": "string" },
+    "confirmationNumber": { "type": "string" },
+    "itineraryNumber": { "type": "string" },
+    "sourceDocuments": { "type": "array", "items": { "type": "string" } },
+    "sensitiveNotes": { "type": "string" },
+    "identityDetails": { "type": "object" },
+    "paymentDetails": { "type": "object" }
+  },
+  "additionalProperties": false
+}

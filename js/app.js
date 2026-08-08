@@ -1,0 +1,223 @@
+"use strict";
+
+const $ = (selector) => document.querySelector(selector);
+const $$ = (selector) => [...document.querySelectorAll(selector)];
+const h = (value = "") => String(value).replace(/[&<>'"]/g, (character) => ({
+  "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", "\"": "&quot;"
+})[character]);
+const maps = (query) => `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
+
+let journey;
+let locations;
+let reservations;
+
+function formatTime(value, qualifier) {
+  if (!value) return "";
+  const [hour, minute] = value.split(":").map(Number);
+  const suffix = hour >= 12 ? "PM" : "AM";
+  const displayHour = hour % 12 || 12;
+  return `${qualifier ? `${qualifier} ` : ""}${displayHour}:${String(minute).padStart(2, "0")} ${suffix}`;
+}
+
+function locationName(id) {
+  return locations.get(id)?.name || id || "Location needs verification";
+}
+
+function baseName(day) {
+  return day.baseLabel || locationName(day.baseLocationId);
+}
+
+function projectedStop(day, stop) {
+  if (!stop.reservationId) {
+    return { title: stop.title, schedule: stop.time, anchorStatus: stop.flexibilityStatus, confirmationStatus: null };
+  }
+  const reservation = reservations.get(stop.reservationId);
+  if (!reservation) throw new Error(`Missing reservation ${stop.reservationId}`);
+  const usesEnd = stop.reservationMoment === "end" || (reservation.endDate === day.date && reservation.date !== day.date);
+  const date = usesEnd ? (reservation.endDate || reservation.date) : reservation.date;
+  const time = usesEnd ? reservation.endTime : reservation.startTime;
+  const qualifier = usesEnd ? reservation.endTimeQualifier : null;
+  return {
+    title: reservation.title,
+    schedule: `${date}${time ? ` · ${formatTime(time, qualifier)}` : ""}`,
+    anchorStatus: reservation.anchorStatus,
+    confirmationStatus: reservation.confirmationStatus
+  };
+}
+
+function hero(eyebrow, title, description) {
+  return `<div class="hero"><div class="eyebrow">${h(eyebrow)}</div><h2>${h(title)}</h2><p>${h(description)}</p></div>`;
+}
+
+function renderNotices() {
+  const node = $("#notices");
+  node.replaceChildren();
+  journey.notices.forEach((notice) => {
+    const label = document.createElement("b");
+    label.textContent = `${notice.title}: `;
+    node.append(label, document.createTextNode(notice.message));
+  });
+}
+
+function renderToday() {
+  const day = journey.days[0];
+  $("#today").innerHTML = `<div class="hero"><div class="eyebrow">NEXT CHAPTER</div><h2>${h(day.title)}</h2><p>${h(day.displayDate)} · ${h(baseName(day))}</p><button class="primary" data-open-day="0">Start Today’s Adventure</button></div>
+  <div class="card"><h3>Built for your pace</h3><p>Restroom-aware stops, Google Maps navigation, flexible timing and a Pause button that keeps the itinerary in service of the traveler.</p></div>
+  <div class="card pause"><h3>The best journeys aren’t rushed.</h3><p>Take your time. We’ll be here when you’re ready.</p></div>`;
+}
+
+function renderJourney() {
+  $("#journey").innerHTML = hero("YOUR COMPLETE ROUTE", journey.subtitle, "Seven chapters, designed around nature, history, heritage and room for unexpected joy.") +
+    journey.days.map((day, index) => `<button class="day-btn" data-open-day="${index}"><strong>${h(day.displayDate)} — ${h(day.title)}</strong><span>${day.stops.length} planned moments · Evening in ${h(baseName(day))}</span></button>`).join("");
+}
+
+function openDay(index) {
+  const day = journey.days[index];
+  const stops = day.stops.map((stop, stopIndex) => {
+    const projection = projectedStop(day, stop);
+    const state = [projection.anchorStatus, projection.confirmationStatus].filter(Boolean).map((item) => `<span class="chip">${h(item)}</span>`).join("");
+    return `<div class="card stop"><div class="num">${stopIndex + 1}</div><div><small>${h(projection.schedule)}</small><h3>${h(projection.title)}</h3><p>${h(stop.description)}</p><div class="chips"><span class="chip">🚻 ${h(stop.note)}</span>${state}</div><div class="actions"><a class="primary" href="${h(maps(stop.mapQuery))}" target="_blank" rel="noopener noreferrer">Google Maps</a><button class="secondary" data-journal-stop="${h(stop.id)}">Complete Stop</button></div></div></div>`;
+  }).join("");
+  const food = day.food.map((item, foodIndex) => `<div class="restaurant"><b>${foodIndex + 1}. ${h(item.name)}</b><span>${h(item.description)}</span><div class="actions"><a class="ghost" href="${h(maps(`${item.name} ${baseName(day)}`))}" target="_blank" rel="noopener noreferrer">Google Maps</a></div></div>`).join("");
+  const foodCard = day.food.length ? `<div class="card"><h3>Dinner choices</h3>${food}</div>` : "";
+  $("#dlgBody").innerHTML = `<div class="eyebrow">${h(day.displayDate)}</div><h2>${h(day.title)}</h2><p class="muted">Evening base: ${h(baseName(day))}</p>${stops}${foodCard}`;
+  $("#dlg").showModal();
+}
+
+function reservationDetails(reservation) {
+  const details = [];
+  if (reservation.startTime) details.push(formatTime(reservation.startTime));
+  if (reservation.endDate) details.push(`through ${reservation.endDate}`);
+  if (reservation.endTime) details.push(formatTime(reservation.endTime, reservation.endTimeQualifier));
+  if (reservation.locationId) details.push(locationName(reservation.locationId));
+  if (reservation.originLocationId && reservation.destinationLocationId) details.push(`${locationName(reservation.originLocationId)} → ${locationName(reservation.destinationLocationId)}`);
+  if (reservation.partySize) details.push(`${reservation.partySize} travelers`);
+  return details;
+}
+
+function renderReservations() {
+  const cards = journey.reservations.map((reservation) => {
+    const details = reservationDetails(reservation);
+    return `<div class="card"><div class="eyebrow">${h(reservation.type)} · ${h(reservation.confirmationStatus)}</div><h3>${h(reservation.title)}</h3><p>${h(reservation.date)}${details.length ? ` · ${details.map(h).join(" · ")}` : ""}</p><p>${h(reservation.publicNote)}</p></div>`;
+  }).join("");
+  $("#reservations").innerHTML = hero("ALL IN ONE PLACE", "Reservations", "Public journey details are shown below. Save private confirmation numbers only on this device.") + cards +
+    `<div class="card"><h3>Private confirmation notes</h3><p class="muted">Stored only in this browser on this phone and never loaded from the public journey dataset. Do not erase browser website data without exporting your notes first.</p><textarea id="privateNotes" rows="8" placeholder="Confirmation numbers, contact names, addresses..."></textarea><button id="savePrivate" class="primary">Save privately</button></div>`;
+  $("#privateNotes").value = localStorage.getItem("jjPrivate") || "";
+}
+
+function savePrivate() {
+  localStorage.setItem("jjPrivate", $("#privateNotes").value);
+  alert("Saved privately on this device.");
+}
+
+function readJournal() {
+  try {
+    const value = JSON.parse(localStorage.getItem("jjJournal") || "[]");
+    return Array.isArray(value) ? value : [];
+  } catch {
+    return [];
+  }
+}
+
+function journalPrompt(stopTitle) {
+  $("#dlgBody").innerHTML = `<div class="eyebrow">CAPTURE THE MOMENT</div><h2>${h(stopTitle)}</h2>
+  <label>Rating</label><select id="jr"><option>5 — Unforgettable</option><option>4 — Excellent</option><option>3 — Good</option><option>2 — Not for us</option><option>1 — Disappointing</option></select>
+  <label>What do you want to remember?</label><textarea id="jm" rows="4"></textarea>
+  <label>Favorite moment</label><input id="jf">
+  <label><input id="js" type="checkbox" style="width:auto"> ✨ This made the journey — an unexpected joy</label>
+  <label>Add photos</label><input id="jp" type="file" accept="image/*" multiple>
+  <button id="saveJournal" class="primary">Add to My Story</button>`;
+  $("#saveJournal").addEventListener("click", () => saveJournal(stopTitle));
+  $("#dlg").showModal();
+}
+
+function saveJournal(stop) {
+  const entries = readJournal();
+  entries.push({ stop, date: new Date().toLocaleString(), rating: $("#jr").value, memory: $("#jm").value, favorite: $("#jf").value, surprise: $("#js").checked, photoCount: $("#jp").files.length });
+  localStorage.setItem("jjJournal", JSON.stringify(entries));
+  $("#dlg").close();
+  renderJournal();
+  alert("Added to Your Story. Photo count is recorded; selected photos remain in your Photos library.");
+}
+
+function renderJournal() {
+  const entries = readJournal();
+  const content = entries.length ? entries.map((entry) => `<div class="card"><div class="eyebrow">${h(entry.date)}</div><h3>${h(entry.stop)}</h3><p><b>${h(entry.rating)}</b></p><p>${h(entry.memory)}</p><p><i>${h(entry.favorite)}</i></p>${entry.surprise ? "<p>✨ <b>This made the journey</b></p>" : ""}<small>${Number(entry.photoCount) || 0} photo(s) selected</small></div>`).join("") : `<div class="card"><h3>Your story begins here</h3><p>Complete a stop or add a memory. At the end of the journey, these reflections will become the raw material for “Your Story Is Ready.”</p></div>`;
+  $("#journal").innerHTML = hero("PLAN · DISCOVER · REMEMBER", "Your Story", "Quick reflections become the foundation for your private photo journal and future travel article.") + `<div class="card"><button id="addMemory" class="primary">Add a Memory</button> <button id="exportJournal" class="secondary">Download Backup</button></div>${content}`;
+}
+
+function exportJournal() {
+  const blob = new Blob([localStorage.getItem("jjJournal") || "[]"], { type: "application/json" });
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = "joyce-journey-journal-backup.json";
+  link.click();
+  setTimeout(() => URL.revokeObjectURL(link.href), 0);
+}
+
+function renderHeritage() {
+  $("#heritage").innerHTML = hero("JOYCE FAMILY HERITAGE", "Follow the records home", "Castlebar, Cong and Joyce Country research notes for John M. Joyce and the wider family story.") + journey.heritageNotes.map((note, index) => `<div class="card"><h3>${index + 1}. Research step</h3><p>${h(note)}</p></div>`).join("");
+}
+
+function pauseTrip() {
+  $("#dlgBody").innerHTML = `<div class="mark">⏸</div><h2>The best journeys aren’t rushed.</h2><p>Take your time. The itinerary serves you—not the other way around.</p><p>When you are ready, continue from the next meaningful moment rather than worrying about being “late.”</p><button id="continueTrip" class="primary">Continue when ready</button>`;
+  $("#continueTrip").addEventListener("click", () => $("#dlg").close());
+  $("#dlg").showModal();
+}
+
+function surprise() {
+  const options = ["A quiet coastal viewpoint", "A ruined abbey or castle", "A local bakery or café", "A harbor walk", "A historic churchyard", "A scenic photo pull-off"];
+  const pick = options[Math.floor(Math.random() * options.length)];
+  $("#dlgBody").innerHTML = `<div class="mark">✦</div><h2>Surprise Me</h2><p>Look nearby for: <b>${h(pick)}</b>.</p><p class="muted">This preview does not search live businesses yet. Use Google Maps’ “Explore nearby” after opening today’s route, and keep the detour within your available time and restroom comfort range.</p><a class="primary" href="${h(maps(`${pick} near me`))}" target="_blank" rel="noopener noreferrer">Explore in Google Maps</a>`;
+  $("#dlg").showModal();
+}
+
+function bindEvents() {
+  $("#startApp").addEventListener("click", () => { localStorage.setItem("jjStarted", "1"); $("#splash").classList.add("hide"); });
+  $("#closeDialog").addEventListener("click", () => $("#dlg").close());
+  $("#pauseButton").addEventListener("click", pauseTrip);
+  $("#surpriseButton").addEventListener("click", surprise);
+  $("#nav").addEventListener("click", (event) => {
+    if (!event.target.dataset.v) return;
+    $$("nav button").forEach((button) => button.classList.remove("active"));
+    event.target.classList.add("active");
+    $$(".view").forEach((view) => view.classList.remove("active"));
+    $(`#${event.target.dataset.v}`).classList.add("active");
+  });
+  document.addEventListener("click", (event) => {
+    const dayButton = event.target.closest("[data-open-day]");
+    if (dayButton) openDay(Number(dayButton.dataset.openDay));
+    const journalButton = event.target.closest("[data-journal-stop]");
+    if (journalButton) {
+      for (const day of journey.days) {
+        const stop = day.stops.find((item) => item.id === journalButton.dataset.journalStop);
+        if (stop) { journalPrompt(projectedStop(day, stop).title); break; }
+      }
+    }
+    if (event.target.id === "savePrivate") savePrivate();
+    if (event.target.id === "addMemory") journalPrompt("A moment from today");
+    if (event.target.id === "exportJournal") exportJournal();
+  });
+}
+
+async function initialize() {
+  bindEvents();
+  if (localStorage.getItem("jjStarted")) $("#splash").classList.add("hide");
+  try {
+    const response = await fetch("data/joyce-journey.json");
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    journey = await response.json();
+    locations = new Map(journey.locations.map((location) => [location.id, location]));
+    reservations = new Map(journey.reservations.map((reservation) => [reservation.id, reservation]));
+    renderNotices();
+    renderToday();
+    renderJourney();
+    renderReservations();
+    renderJournal();
+    renderHeritage();
+  } catch (error) {
+    $("#today").innerHTML = `<div class="card"><h3>Journey unavailable</h3><p class="danger">The canonical journey data could not be loaded. Serve this site over HTTP and try again.</p><small>${h(error.message)}</small></div>`;
+  }
+}
+
+initialize();

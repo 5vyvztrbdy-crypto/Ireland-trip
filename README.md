@@ -28,4 +28,20 @@ This repository is the durable record for product decisions, architecture, deliv
 - [Delivery](docs/09-delivery/roadmap.md)
 - [Legacy prototype](docs/10-legacy/prototype-inventory.md)
 
-`index.html` is a preserved early prototype. It is not the complete product specification and must remain unchanged until a migration is explicitly authorized.
+`index.html` began as the preserved early prototype. Sprint 1 authorized its migration to render the Joyce Journey from a canonical public dataset; the documentation remains the authoritative product context.
+
+## Local development
+
+Sprint 1 keeps the application framework-free and compatible with GitHub Pages. Because the canonical journey is fetched from JSON, serve the repository over HTTP instead of opening `index.html` directly:
+
+```sh
+python3 -m http.server 8000
+```
+
+Then open `http://localhost:8000/`. Run the dependency-free validation harness with:
+
+```sh
+npm test
+```
+
+Only public journey facts belong in `data/joyce-journey.json`. See [Public and Private Journey Data Boundary](docs/07-architecture/private-data-boundary.md) before adding reservation data.

@@ -1,0 +1,8 @@
+# Local-only reservation data and retained source material
+data/private/
+private-data/
+reservation-sources/
+*.private.json
+
+# Generated browser bundles must not leak data through source maps
+*.map
