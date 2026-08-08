@@ -16,3 +16,17 @@ Build backward from the Storied Album. Prioritize the core journey-to-publishing
 8. Joyce Journey variants, economics validation, deployment, and four-week marketing readiness.
 
 This ordering is planned architecture, not a fixed schedule. Sprint scope and dates remain **TBD**.
+
+## Sprint 2 planning — exploration controls
+
+The following product direction is confirmed for Sprint 2 planning; implementation scope and final traveler-facing wording remain to be selected:
+
+- retire “Surprise” as the primary exploration concept;
+- define a provisionally named “Explore Nearby” or “What's Nearby?” action in Today / Journey Perspective;
+- treat exploration as journey-aware recommendation work that can eventually use location, destination, route, reservation anchors, time, preferences, detour tolerance, and Opportunity Meter context;
+- keep Unexpected Joy as a discovery the traveler preserves after experiencing it, with paths into Story Moments, Campfire, media/story material, and the Storied Album;
+- preserve Pause while evaluating “Take Your Time,” and define it as positively framed replanning of flexible parts of the day;
+- protect reservation anchors and avoid prominent placement of exploration controls on the Reservations screen;
+- select and validate final user-facing wording before production UI implementation.
+
+This planning update does not authorize production UI changes.

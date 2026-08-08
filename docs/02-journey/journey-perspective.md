@@ -12,6 +12,8 @@ It should:
 - complement Google Maps or other navigation with higher-level journey understanding;
 - support explainable opportunities near the route.
 
+Today / Journey Perspective is the primary home for exploration and intentional-slowdown controls. The exploration action, with final wording still **TBD**, should use journey context rather than behave as a conventional Near Me search. Pause / Take Your Time should trigger reconsideration of flexible plans while protecting trusted reservation anchors and using positive framing.
+
 ## Current implementation
 
 The prototype offers hard-coded daily stop lists and Google Maps search links. It does not render an integrated journey map or compute route, time, or change relationships.

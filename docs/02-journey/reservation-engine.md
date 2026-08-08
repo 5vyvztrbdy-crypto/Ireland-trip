@@ -4,6 +4,8 @@
 
 Reservations are trusted journey anchors. A single canonical reservation record drives the timeline, reservation views, map, navigation, and later story and Album context.
 
+The Reservations screen should remain focused on those trusted anchors. Exploration actions such as Explore Nearby and Pause / Take Your Time belong primarily in Today / Journey Perspective and should not be prominently placed on Reservations.
+
 Required ingestion paths:
 
 - screenshots and images;
