@@ -7,6 +7,8 @@
 - Critical extracted reservation facts become authoritative only after traveler confirmation.
 - Travelers can export their underlying source material without buying an Album.
 - Recommendations expose meaningful reasons.
+- “Start Today’s Adventure” enters a map-led Journey Perspective that orients the traveler within the current day, distinguishes protected reservation anchors from flexible or optional stops, and shows how route and schedule opportunities fit around trusted anchors.
+- Before departure, travelers receive concise, relevant preparation that supports intentional story capture, practical journey readiness, and respectful participation in the destination without becoming a generic destination guide or commercial Album upsell.
 - The system accepts large, imperfectly organized media collections.
 - A rough Album draft can be edited by the traveler before publishing.
 - Selected printed pages can open their exact linked digital memory.

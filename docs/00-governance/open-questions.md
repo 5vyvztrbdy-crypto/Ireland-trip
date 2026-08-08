@@ -10,6 +10,10 @@ These items are **TBD** and must not be presented as decided.
 - Prompt timing, personalization, frequency, and controls.
 - Collaboration or multiple-author requirements.
 - Living Album sharing, access, hosting duration, and inheritance.
+- Whether a souvenir calendar should become an additional publishing product, and what customer value, format, and creation workflow it would require. The concept is exploratory, not committed and not a Sprint 2 requirement.
+- Exact printed layout and visual treatment of daily Journey Perspective openings.
+- Final customer-facing name, interface form, and timing for the working “Prepare Your Story” concept.
+- Recommendation logic, personalization boundaries, sourcing, and traveler controls for near-departure Story Prep and journey-specific guidance.
 
 ## Technical
 
