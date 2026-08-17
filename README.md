@@ -28,7 +28,7 @@ This repository is the durable record for product decisions, architecture, deliv
 - [Delivery](docs/09-delivery/roadmap.md)
 - [Legacy prototype](docs/10-legacy/prototype-inventory.md)
 
-`index.html` began as the preserved early prototype. Sprint 1 authorized its migration to render the Joyce Journey from a canonical public dataset. Sprint 2's first authorized implementation slice adds a date-aware Home and a reusable next-reservation foundation while preserving that dataset as the source of truth. RavensCircle Product Bible v0.3 is the product authority for Sprint 2.
+`index.html` began as the preserved early prototype. Sprint 1 authorized its migration to render the Joyce Journey from a canonical public dataset. Sprint 2's first authorized implementation slice adds a date-aware Home, reusable next-reservation and preference foundations, data-derived journey-country identity, and a primary Home / Journey / Memories information architecture while preserving that dataset as the source of truth. Reservations are contextual to Journey; heritage remains canonical journey context rather than a standalone feature. RavensCircle Product Bible v0.3 is the product authority for Sprint 2.
 
 ## Local development
 

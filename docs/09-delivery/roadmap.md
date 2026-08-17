@@ -17,6 +17,15 @@ Build backward from the Storied Album. Prioritize the core journey-to-publishing
 
 This ordering is planned architecture, not a fixed schedule. Sprint scope and dates remain **TBD**.
 
+## Sprint 2 Slice 1 — authorized application architecture
+
+- Keep primary navigation to Home, Journey, and Memories.
+- Expose reservations contextually within Journey while preserving canonical reservation data, private local notes, and Google Maps navigation.
+- Preserve heritage and research data as journey context without a standalone Heritage screen.
+- Treat Memories as the collection and Campfire as its small persistent capture ritual: **Campfire → Memories → Storied Album**.
+- Store interest and detour-tolerance preferences locally as one shared input for Surprise and later journey-aware capabilities.
+- Derive destination-country flags and a distinct return-home treatment from canonical location and reservation data rather than journey-specific interface markup.
+
 ## Sprint 2 planning — exploration controls
 
 The following product direction is confirmed for Sprint 2 planning; implementation scope and final traveler-facing wording remain to be selected:

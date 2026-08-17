@@ -51,6 +51,7 @@ const byReservation = Object.fromEntries(journey.reservations.map((reservation) 
 const byDay = Object.fromEntries(journey.days.map((day) => [day.date, day]));
 
 const byLocation = Object.fromEntries(journey.locations.map((location) => [location.id, location]));
+for (const location of journey.locations) assert(/^[A-Z]{2}$/.test(location.countryCode), `Location ${location.id} must provide an ISO country code for journey identity`);
 assert.equal(byReservation["res-keflavik-lodging"].title, "Hafnargata lodging");
 assert.equal(byReservation["res-keflavik-lodging"].date, "2026-08-29");
 const icelandStops = new Set(byDay["2026-08-29"].stops.map((stop) => stop.id));
@@ -83,6 +84,7 @@ for (const id of ["res-jetblue-354", "res-jetblue-507"]) {
 }
 assert(!dataText.includes("9:15 AM"), "Obsolete Newgrange timing must be absent");
 assert(!dataText.includes("much earlier return") && !dataText.includes("critical conflict"), "Obsolete Budget conflict must be absent");
+assert(Array.isArray(journey.heritageNotes) && journey.heritageNotes.length > 0, "Heritage context must remain in canonical journey data");
 
 for (const reservation of journey.reservations.filter((item) => ["fixed", "protected"].includes(item.anchorStatus))) {
   assert(journey.days.some((day) => day.reservationIds.includes(reservation.id)), `Anchor ${reservation.id} must project into a day`);
@@ -95,6 +97,13 @@ assert(app.includes("projectedStop(day, stop)"), "Renderer must project linked s
 assert(app.includes("journeyDateState(journey)"), "Home must derive its state from journey dates");
 assert(!app.includes("journey.days[0]"), "Home must not hard-code the first journey day");
 assert(app.includes("nextUpcomingReservation(journey.reservations)"), "Home must derive the next reservation from canonical data");
+assert(index.includes('<button class="active" data-v="today">Home</button><button data-v="journey">Journey</button><button data-v="journal">Memories</button>'), "Primary navigation must be Home, Journey, and Memories");
+assert(!index.includes('data-v="reservations"') && !index.includes('data-v="heritage"'), "Reservations and Heritage must not be permanent navigation tabs");
+assert(index.includes('<section id="reservations" class="view"></section>') && app.includes('data-view="reservations"'), "Reservations must remain available contextually from Journey");
+assert(!index.includes('<section id="heritage"') && !app.includes("renderHeritage"), "Heritage must not remain a standalone screen");
+assert(index.includes('id="campfireButton" class="fab">🔥 Campfire</button>'), "Campfire must remain a small persistent capture action");
+assert(app.includes("journeyCountrySequence(journey)"), "Journey flags must derive from canonical journey data");
+assert(!index.includes("🇮🇸") && !index.includes("🇮🇪"), "Country flags must not be hard-coded in HTML");
 assert(!index.includes("sourceMappingURL") && !app.includes("sourceMappingURL"), "Deployable code must not reference source maps");
 
 console.log(`Validated ${journey.title}: ${journey.days.length} days, ${journey.reservations.length} reservations, ${journey.locations.length} locations.`);
