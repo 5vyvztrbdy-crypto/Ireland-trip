@@ -3,7 +3,7 @@
   "version": "0.3.0",
   "private": true,
   "scripts": {
-    "test": "node tests/validate-journey.mjs",
+    "test": "node tests/validate-journey.mjs && node tests/journey-state.test.mjs",
     "check": "node --check js/app.js && npm test"
   }
 }

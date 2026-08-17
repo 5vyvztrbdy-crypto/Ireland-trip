@@ -1,5 +1,7 @@
 "use strict";
 
+import { journeyDateState, nextUpcomingReservation } from "./journey-state.mjs";
+
 const $ = (selector) => document.querySelector(selector);
 const $$ = (selector) => [...document.querySelectorAll(selector)];
 const h = (value = "") => String(value).replace(/[&<>'"]/g, (character) => ({
@@ -60,10 +62,37 @@ function renderNotices() {
 }
 
 function renderToday() {
-  const day = journey.days[0];
-  $("#today").innerHTML = `<div class="hero"><div class="eyebrow">NEXT CHAPTER</div><h2>${h(day.title)}</h2><p>${h(day.displayDate)} · ${h(baseName(day))}</p><button class="primary" data-open-day="0">Start Today’s Adventure</button></div>
-  <div class="card"><h3>Built for your pace</h3><p>Restroom-aware stops, Google Maps navigation, flexible timing and a Pause button that keeps the itinerary in service of the traveler.</p></div>
-  <div class="card pause"><h3>The best journeys aren’t rushed.</h3><p>Take your time. We’ll be here when you’re ready.</p></div>`;
+  const state = journeyDateState(journey);
+  const paths = `<div class="home-paths" aria-label="Primary journey paths"><button class="home-path" data-view="journey"><div class="eyebrow">HUGINN · THOUGHT</div><strong>Plan &amp; Journey</strong><span>Find your way forward</span></button><button class="home-path memory" data-view="journal"><div class="eyebrow">MUNINN · MEMORY</div><strong>Memories</strong><span>Return to your story</span></button></div>`;
+  let lead;
+  if (state.phase === "before") {
+    lead = `<div class="hero home-context"><div class="eyebrow">YOUR JOURNEY AWAITS</div><h2>${h(journey.title)}</h2><p>Your first chapter begins ${h(state.day.displayDate)}.</p><button class="primary" data-open-day="${state.dayIndex}">Preview the Journey</button></div>`;
+  } else if (state.phase === "after") {
+    lead = `<div class="hero home-context"><div class="eyebrow">JOURNEY COMPLETE</div><h2>Your story continues</h2><p>Your ${h(journey.subtitle)} journey is complete. Return to the moments you saved along the way.</p><button class="primary" data-view="journal">Visit Your Memories</button></div>`;
+  } else {
+    lead = `<div class="hero home-context"><div class="eyebrow">TODAY’S CHAPTER</div><h2>${h(state.day.title)}</h2><p>${h(state.day.displayDate)} · ${h(baseName(state.day))}</p><button class="primary" data-open-day="${state.dayIndex}">Start Today’s Adventure</button></div>`;
+  }
+  $("#today").innerHTML = paths + lead + `
+  <div class="card home-secondary"><h3>Built for your pace</h3><p>Restroom-aware stops, Google Maps navigation, flexible timing and a Pause button that keeps the itinerary in service of the traveler.</p></div>`;
+}
+
+function reservationMapQuery(reservation) {
+  const locationId = reservation.locationId || reservation.destinationLocationId || reservation.originLocationId;
+  return locations.get(locationId)?.mapQuery || null;
+}
+
+function renderNextReservation() {
+  const reservation = nextUpcomingReservation(journey.reservations);
+  const node = $("#nextReservation");
+  if (!reservation) {
+    node.classList.remove("visible");
+    node.replaceChildren();
+    return;
+  }
+  const query = reservationMapQuery(reservation);
+  node.classList.add("visible");
+  const schedule = [reservation.date, formatTime(reservation.startTime)].filter(Boolean).join(" · ");
+  node.innerHTML = `<div class="eyebrow">NEXT RESERVATION</div><strong>${h(schedule)}</strong><span>${h(reservation.title)}</span>${query ? `<a href="${h(maps(query))}" target="_blank" rel="noopener noreferrer">Navigate in Google Maps</a>` : ""}`;
 }
 
 function renderJourney() {
@@ -172,21 +201,30 @@ function surprise() {
   $("#dlg").showModal();
 }
 
+function campfireCapture() {
+  journalPrompt("A campfire capture");
+}
+
+function switchView(viewName) {
+  $$('nav button').forEach((button) => button.classList.toggle("active", button.dataset.v === viewName));
+  $$(".view").forEach((view) => view.classList.toggle("active", view.id === viewName));
+}
+
 function bindEvents() {
   $("#startApp").addEventListener("click", () => { localStorage.setItem("jjStarted", "1"); $("#splash").classList.add("hide"); });
   $("#closeDialog").addEventListener("click", () => $("#dlg").close());
   $("#pauseButton").addEventListener("click", pauseTrip);
   $("#surpriseButton").addEventListener("click", surprise);
+  $("#campfireButton").addEventListener("click", campfireCapture);
   $("#nav").addEventListener("click", (event) => {
     if (!event.target.dataset.v) return;
-    $$("nav button").forEach((button) => button.classList.remove("active"));
-    event.target.classList.add("active");
-    $$(".view").forEach((view) => view.classList.remove("active"));
-    $(`#${event.target.dataset.v}`).classList.add("active");
+    switchView(event.target.dataset.v);
   });
   document.addEventListener("click", (event) => {
     const dayButton = event.target.closest("[data-open-day]");
     if (dayButton) openDay(Number(dayButton.dataset.openDay));
+    const viewButton = event.target.closest("[data-view]");
+    if (viewButton) switchView(viewButton.dataset.view);
     const journalButton = event.target.closest("[data-journal-stop]");
     if (journalButton) {
       for (const day of journey.days) {
@@ -210,6 +248,7 @@ async function initialize() {
     locations = new Map(journey.locations.map((location) => [location.id, location]));
     reservations = new Map(journey.reservations.map((reservation) => [reservation.id, reservation]));
     renderNotices();
+    renderNextReservation();
     renderToday();
     renderJourney();
     renderReservations();

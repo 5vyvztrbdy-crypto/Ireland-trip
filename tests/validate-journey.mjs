@@ -88,10 +88,13 @@ for (const reservation of journey.reservations.filter((item) => ["fixed", "prote
   assert(journey.days.some((day) => day.reservationIds.includes(reservation.id)), `Anchor ${reservation.id} must project into a day`);
 }
 
-assert(index.includes('<script src="js/app.js" defer></script>'), "index.html must load the external renderer");
+assert(index.includes('<script type="module" src="js/app.js"></script>'), "index.html must load the external renderer");
 assert(!index.includes("const days="), "index.html must not embed itinerary data");
 assert(app.includes('fetch("data/joyce-journey.json")'), "Renderer must fetch canonical JSON");
 assert(app.includes("projectedStop(day, stop)"), "Renderer must project linked stops from reservations");
+assert(app.includes("journeyDateState(journey)"), "Home must derive its state from journey dates");
+assert(!app.includes("journey.days[0]"), "Home must not hard-code the first journey day");
+assert(app.includes("nextUpcomingReservation(journey.reservations)"), "Home must derive the next reservation from canonical data");
 assert(!index.includes("sourceMappingURL") && !app.includes("sourceMappingURL"), "Deployable code must not reference source maps");
 
 console.log(`Validated ${journey.title}: ${journey.days.length} days, ${journey.reservations.length} reservations, ${journey.locations.length} locations.`);
