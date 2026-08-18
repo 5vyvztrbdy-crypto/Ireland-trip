@@ -273,6 +273,7 @@ function bindEvents() {
 }
 
 async function initialize() {
+  $("#splash").classList.remove("hide");
   bindEvents();
   try {
     const response = await fetch("data/joyce-journey.json");
