@@ -233,7 +233,7 @@ function switchView(viewName) {
 }
 
 function bindEvents() {
-  $("#startApp").addEventListener("click", () => { localStorage.setItem("jjStarted", "1"); $("#splash").classList.add("hide"); });
+  $("#startApp").addEventListener("click", () => $("#splash").classList.add("hide"));
   $("#closeDialog").addEventListener("click", () => $("#dlg").close());
   $("#pauseButton").addEventListener("click", pauseTrip);
   $("#surpriseButton").addEventListener("click", surprise);
@@ -274,7 +274,6 @@ function bindEvents() {
 
 async function initialize() {
   bindEvents();
-  if (localStorage.getItem("jjStarted")) $("#splash").classList.add("hide");
   try {
     const response = await fetch("data/joyce-journey.json");
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
